@@ -18,14 +18,9 @@ TRANSP: '^T';
 RANK  : 'rank';
 
 input
-    : setVar NL input     # ToSetVar
-    | plusOrMinus NL? EOF # Calculate
+    : ID EQUAL plusOrMinus EOF     # ToSetVar
+    | plusOrMinus EOF              # Calculate
     ;
-
-setVar
-    : ID EQUAL plusOrMinus # SetVariable
-    ;
-
 
 plusOrMinus
     : plusOrMinus PLUS multOrDiv  # Plus

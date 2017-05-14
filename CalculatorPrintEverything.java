@@ -23,15 +23,16 @@ public class CalculatorPrintEverything implements CalculatorListener {
         System.err.println("exiting Calculate");
     }
 
-    @Override
-    public void enterSetVariable(CalculatorParser.SetVariableContext ctx) {
-        System.err.println("entering SetVariable");
-    }
 
-    @Override
-    public void exitSetVariable(CalculatorParser.SetVariableContext ctx) {
-        System.err.println("exiting SetVariable");
-    }
+//    @Override
+//    public void enterSetVariable(CalculatorParser.SetVariableContext ctx) {
+//        System.err.println("entering SetVariable");
+//    }
+//
+//    @Override
+//    public void exitSetVariable(CalculatorParser.SetVariableContext ctx) {
+//        System.err.println("exiting SetVariable");
+//    }
 
     @Override
     public void enterToMultOrDiv(CalculatorParser.ToMultOrDivContext ctx) {

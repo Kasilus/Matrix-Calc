@@ -1,7 +1,6 @@
 import java.util.HashMap;
 
 public class CalculatorBaseVisitorImpl extends CalculatorBaseVisitor<Double> {
-    private HashMap<String, Double> variables = new HashMap<String, Double>();
 
     @Override
     public Double visitPlus(CalculatorParser.PlusContext ctx) {
@@ -24,11 +23,16 @@ public class CalculatorBaseVisitorImpl extends CalculatorBaseVisitor<Double> {
     }
 
     @Override
-    public Double visitSetVariable(CalculatorParser.SetVariableContext ctx) {
+    public Double visitToSetVar(CalculatorParser.ToSetVarContext ctx) {
         Double value = visit(ctx.plusOrMinus());
-        variables.put(ctx.ID().getText(), value);
+        Storage.set(ctx.ID().getText(), value);
         return value;
     }
+
+//    @Override
+//    public Double visitSetVariable(CalculatorParser.SetVariableContext ctx) {
+//
+//    }
 
     @Override
     public Double visitPower(CalculatorParser.PowerContext ctx) {
@@ -68,7 +72,7 @@ public class CalculatorBaseVisitorImpl extends CalculatorBaseVisitor<Double> {
 
     @Override
     public Double visitVariable(CalculatorParser.VariableContext ctx) {
-        return variables.get(ctx.ID().getText());
+        return Storage.get(ctx.ID().getText());
     }
 
     @Override
