@@ -1,8 +1,8 @@
 grammar Calculator;
 INT    : [0-9]+;
-DOUBLE : [0-9]+'.'[0-9]+;
-PI     : 'pi';
-E      : 'e';
+DOUBLE : [+-]?[0-9]+'.'[0-9]+;
+NUMBER : INT
+       | DOUBLE;
 NL     : '\n';
 WS     : [ \t\r]+ -> skip;
 ID     : [A-Z]+;
@@ -16,6 +16,8 @@ LPAR  : '(';
 RPAR  : ')';
 TRANSP: '^T';
 RANK  : 'rank';
+MATRIX : '[''['NUMBER(','[ ]*NUMBER)*']'
+(','[ ]*'['NUMBER (','[ ]*NUMBER)*']')*']';
 
 input
     : ID EQUAL plusOrMinus EOF     # ToSetVar
@@ -43,7 +45,6 @@ pow
     ;
 
 
-
 unaryMinus
     : MINUS unaryMinus # ChangeSign
     | rank             # Rang
@@ -51,10 +52,7 @@ unaryMinus
     ;
 
 atom
-    : PI                    # ConstantPI
-    | E                     # ConstantE
-    | DOUBLE                # Double
-    | INT                   # Int
+    : MATRIX                # Matrix
     | ID                    # Variable
     | LPAR plusOrMinus RPAR # Braces
     ;

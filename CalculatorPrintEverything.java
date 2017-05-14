@@ -149,44 +149,37 @@ public class CalculatorPrintEverything implements CalculatorListener {
     }
 
     @Override
-    public void enterConstantPI(CalculatorParser.ConstantPIContext ctx) {
-
+    public void enterMatrix(CalculatorParser.MatrixContext ctx) {
+        System.err.println("entering Matrix");
     }
 
     @Override
-    public void exitConstantPI(CalculatorParser.ConstantPIContext ctx) {
-
+    public void exitMatrix(CalculatorParser.MatrixContext ctx) {
+        System.err.println("exiting Matrix");
     }
 
-    @Override
-    public void enterConstantE(CalculatorParser.ConstantEContext ctx) {
 
-    }
 
-    @Override
-    public void exitConstantE(CalculatorParser.ConstantEContext ctx) {
 
-    }
-
-    @Override
-    public void enterDouble(CalculatorParser.DoubleContext ctx) {
-        System.err.println("entering Double");
-    }
-
-    @Override
-    public void exitDouble(CalculatorParser.DoubleContext ctx) {
-        System.err.println("exiting Double");
-    }
-
-    @Override
-    public void enterInt(CalculatorParser.IntContext ctx) {
-        System.err.println("entering Int");
-    }
-
-    @Override
-    public void exitInt(CalculatorParser.IntContext ctx) {
-        System.err.println("exiting Int");
-    }
+//    @Override
+//    public void enterDouble(CalculatorParser.DoubleContext ctx) {
+//        System.err.println("entering Double");
+//    }
+//
+//    @Override
+//    public void exitDouble(CalculatorParser.DoubleContext ctx) {
+//        System.err.println("exiting Double");
+//    }
+//
+//    @Override
+//    public void enterInt(CalculatorParser.IntContext ctx) {
+//        System.err.println("entering Int");
+//    }
+//
+//    @Override
+//    public void exitInt(CalculatorParser.IntContext ctx) {
+//        System.err.println("exiting Int");
+//    }
 
     @Override
     public void enterVariable(CalculatorParser.VariableContext ctx) {
