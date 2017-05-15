@@ -5,7 +5,7 @@ Matrix calculator.
     > [[4,7.12],[-8.13, 6]];
     > [[-3.820,8,1,12], [5, 7, 9, 300]];
 
-    This calculator maintains adding, subtraction, multiplication, rang.
+    This calculator maintains adding, subtraction, multiplication, rang, transposition.
     Also you can assign matrices and use them later.
 
     Example 1 :
