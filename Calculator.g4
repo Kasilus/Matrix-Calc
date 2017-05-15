@@ -1,5 +1,5 @@
 grammar Calculator;
-INT    : [0-9]+;
+INT    : [+-]?[0-9]+;
 DOUBLE : [+-]?[0-9]+'.'[0-9]+;
 NUMBER : INT
        | DOUBLE;
@@ -11,13 +11,14 @@ PLUS  : '+';
 EQUAL : '=';
 MINUS : '-';
 MULT  : '*';
-DIV   : '/';
 LPAR  : '(';
 RPAR  : ')';
 TRANSP: '^T';
 RANK  : 'rank';
 MATRIX : '[''['NUMBER(','[ ]*NUMBER)*']'
 (','[ ]*'['NUMBER (','[ ]*NUMBER)*']')*']';
+VALUE : MATRIX
+      | INT;
 
 input
     : ID EQUAL plusOrMinus EOF     # ToSetVar
@@ -25,23 +26,22 @@ input
     ;
 
 plusOrMinus
-    : plusOrMinus PLUS multOrDiv  # Plus
-    | plusOrMinus MINUS multOrDiv # Minus
-    | multOrDiv                   # ToMultOrDiv
+    : plusOrMinus PLUS mult  # Plus
+    | plusOrMinus MINUS mult # Minus
+    | mult                   # ToMult
     ;
 
-multOrDiv
-    : multOrDiv MULT pow # Multiplication
-    | multOrDiv DIV pow  # Division
-    | pow                # ToPow
+mult
+    : mult MULT transponation     # Multiplication
+    | transponation               # ToTransponation
     ;
 
 rank
     : RANK LPAR plusOrMinus RPAR  #Runk
     ;
 
-pow
-    : unaryMinus (TRANSP)? # Power
+transponation
+    : unaryMinus (TRANSP)?        # Power
     ;
 
 

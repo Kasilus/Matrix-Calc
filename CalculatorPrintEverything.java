@@ -3,6 +3,7 @@ import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class CalculatorPrintEverything implements CalculatorListener {
+
     @Override
     public void enterToSetVar(CalculatorParser.ToSetVarContext ctx) {
         System.err.println("entering ToSetVar");
@@ -23,25 +24,14 @@ public class CalculatorPrintEverything implements CalculatorListener {
         System.err.println("exiting Calculate");
     }
 
-
-//    @Override
-//    public void enterSetVariable(CalculatorParser.SetVariableContext ctx) {
-//        System.err.println("entering SetVariable");
-//    }
-//
-//    @Override
-//    public void exitSetVariable(CalculatorParser.SetVariableContext ctx) {
-//        System.err.println("exiting SetVariable");
-//    }
-
     @Override
-    public void enterToMultOrDiv(CalculatorParser.ToMultOrDivContext ctx) {
-        System.err.println("entering ToMultOrDiv");
+    public void enterToMult(CalculatorParser.ToMultContext ctx) {
+        System.err.println("entering ToMult");
     }
 
     @Override
-    public void exitToMultOrDiv(CalculatorParser.ToMultOrDivContext ctx) {
-        System.err.println("exiting ToMultOrDiv");
+    public void exitToMult(CalculatorParser.ToMultContext ctx) {
+        System.err.println("exiting ToMult");
     }
 
     @Override
@@ -64,8 +54,6 @@ public class CalculatorPrintEverything implements CalculatorListener {
         System.err.println("exiting Minus");
     }
 
-
-
     @Override
     public void enterMultiplication(CalculatorParser.MultiplicationContext ctx) {
         System.err.println("entering Multiplication");
@@ -77,23 +65,13 @@ public class CalculatorPrintEverything implements CalculatorListener {
     }
 
     @Override
-    public void enterDivision(CalculatorParser.DivisionContext ctx) {
-        System.err.println("entering Division");
+    public void enterToTransponation(CalculatorParser.ToTransponationContext ctx) {
+        System.err.println("entering ToTransponation");
     }
 
     @Override
-    public void exitDivision(CalculatorParser.DivisionContext ctx) {
-        System.err.println("exiting Division");
-    }
-
-    @Override
-    public void enterToPow(CalculatorParser.ToPowContext ctx) {
-        System.err.println("entering ToPow");
-    }
-
-    @Override
-    public void exitToPow(CalculatorParser.ToPowContext ctx) {
-        System.err.println("exiting ToPow");
+    public void exitToTransponation(CalculatorParser.ToTransponationContext ctx) {
+        System.err.println("exiting ToTransponation");
     }
 
     @Override
@@ -157,29 +135,6 @@ public class CalculatorPrintEverything implements CalculatorListener {
     public void exitMatrix(CalculatorParser.MatrixContext ctx) {
         System.err.println("exiting Matrix");
     }
-
-
-
-
-//    @Override
-//    public void enterDouble(CalculatorParser.DoubleContext ctx) {
-//        System.err.println("entering Double");
-//    }
-//
-//    @Override
-//    public void exitDouble(CalculatorParser.DoubleContext ctx) {
-//        System.err.println("exiting Double");
-//    }
-//
-//    @Override
-//    public void enterInt(CalculatorParser.IntContext ctx) {
-//        System.err.println("entering Int");
-//    }
-//
-//    @Override
-//    public void exitInt(CalculatorParser.IntContext ctx) {
-//        System.err.println("exiting Int");
-//    }
 
     @Override
     public void enterVariable(CalculatorParser.VariableContext ctx) {

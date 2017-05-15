@@ -1,93 +1,136 @@
 import Jama.Matrix;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CalculatorBaseVisitorImpl extends CalculatorBaseVisitor<Matrix> {
+public class CalculatorBaseVisitorImpl extends CalculatorBaseVisitor<Value> {
 
     @Override
-    public Matrix visitPlus(CalculatorParser.PlusContext ctx) {
-        return visit(ctx.plusOrMinus()).plus(visit(ctx.multOrDiv()));
-    }
+    public Value visitPlus(CalculatorParser.PlusContext ctx) {
 
-    @Override
-    public Matrix visitMinus(CalculatorParser.MinusContext ctx) {
-        return visit(ctx.plusOrMinus()).minus(visit(ctx.multOrDiv()));
-    }
+        Value value1 = visit(ctx.plusOrMinus());
+        Value value2 = visit(ctx.mult());
 
-    @Override
-    public Matrix visitMultiplication(CalculatorParser.MultiplicationContext ctx) {
-
-        double[][] matrix = visit(ctx.multOrDiv()).getArray();
-
-        if ((matrix.length == 1)&& (matrix[0].length == 1)){
-            return visit(ctx.pow()).times(matrix[0][0]);
+        if (value1.isInteger()){
+            throw new IllegalStateException();
         }
 
-        matrix = visit(ctx.pow()).getArray();
-
-        if ((matrix.length == 1)&&(matrix[0].length == 1)){
-            return visit(ctx.multOrDiv()).times(matrix[0][0]);
+        if (value2.isInteger()){
+            throw new IllegalStateException();
         }
 
-        return visit(ctx.multOrDiv()).times(visit(ctx.pow()));
+        Value sum = new Value((value1.asMatrix()).plus(value2.asMatrix()));
+
+        return sum;
     }
 
     @Override
-    public Matrix visitDivision(CalculatorParser.DivisionContext ctx) {
-        return visit(ctx.multOrDiv()).times(visit(ctx.pow()));
+    public Value visitMinus(CalculatorParser.MinusContext ctx) {
+
+        Value value1 = visit(ctx.plusOrMinus());
+        Value value2 = visit(ctx.mult());
+
+        if (value1.isInteger()){
+            throw new IllegalStateException();
+        }
+
+        if (value2.isInteger()){
+            throw new IllegalStateException();
+        }
+
+        Value sub = new Value((value1.asMatrix()).minus(value2.asMatrix()));
+
+        return sub;
     }
 
     @Override
-    public Matrix visitToSetVar(CalculatorParser.ToSetVarContext ctx) {
-        Matrix value = visit(ctx.plusOrMinus());
-        Storage.set(ctx.ID().getText(), value);
-        return value;
+    public Value visitMultiplication(CalculatorParser.MultiplicationContext ctx) {
+
+        Value value1 = visit(ctx.mult());
+        Value value2 = visit(ctx.transponation());
+
+        if ((value1.isInteger())&&(value2.isInteger())){
+            throw new IllegalStateException();
+        }
+
+        Value valueMult;
+
+        if (value1.isInteger()){
+            valueMult = new Value(value2.asMatrix().times(value1.asInteger()));
+            return valueMult;
+        }
+
+        if (value2.isInteger()){
+            valueMult = new Value(value1.asMatrix().times(value2.asInteger()));
+            return valueMult;
+        }
+
+
+        return new Value(visit(ctx.mult()).asMatrix().times(visit(ctx.transponation()).asMatrix()));
     }
 
-//    @Override
-//    public Double visitSetVariable(CalculatorParser.SetVariableContext ctx) {
-//
-//    }
 
     @Override
-    public Matrix visitPower(CalculatorParser.PowerContext ctx) {
-        if (ctx.TRANSP() != null)
-            return visit(ctx.unaryMinus()).transpose();
+    public Value visitToSetVar(CalculatorParser.ToSetVarContext ctx) {
+
+        Value value = visit(ctx.plusOrMinus());
+
+        if (value.isMatrix()) {
+            Matrix matrixValue = value.asMatrix();
+            Storage.set(ctx.ID().getText(), matrixValue);
+            return value;
+        }
+        return null;
+    }
+
+
+    @Override
+    public Value visitPower(CalculatorParser.PowerContext ctx) {
+
+        if (ctx.TRANSP() != null) {
+
+            Value value = new Value(visit(ctx.unaryMinus()).asMatrix().transpose());
+
+            return value;
+        }
+
         return visit(ctx.unaryMinus());
     }
 
     @Override
-    public Matrix visitRunk(CalculatorParser.RunkContext ctx) {
+    public Value visitRunk(CalculatorParser.RunkContext ctx) {
 
-        int runk = visit(ctx.plusOrMinus()).rank();
-        double[][] runkArray = new double[1][1];
-        runkArray[0][0] = runk;
-        Matrix runkMatrix = new Matrix(runkArray);
+        Value value = visit(ctx.plusOrMinus());
 
-        return runkMatrix;
+        if (value.isInteger()){
+            throw new IllegalStateException();
+        }
+
+        Integer runk = value.asMatrix().rank();
+
+        return new Value(runk);
     }
 
     @Override
-    public Matrix visitChangeSign(CalculatorParser.ChangeSignContext ctx) {
-        return visit(ctx.unaryMinus()).times(-1);
+    public Value visitChangeSign(CalculatorParser.ChangeSignContext ctx) {
+
+        Value value = visit(ctx.unaryMinus());
+
+        if (value.isInteger()){
+            throw new IllegalStateException();
+        }
+
+        return new Value(value.asMatrix().times(-1));
     }
 
     @Override
-    public Matrix visitBraces(CalculatorParser.BracesContext ctx) {
+    public Value visitBraces(CalculatorParser.BracesContext ctx) {
         return visit(ctx.plusOrMinus());
     }
 
-
-//    @Override
-//    public Double visitInt(CalculatorParser.IntContext ctx) {
-//        return Double.parseDouble(ctx.INT().getText());
-//    }
-
     @Override
-    public Matrix visitMatrix(CalculatorParser.MatrixContext ctx) {
+    public Value visitMatrix(CalculatorParser.MatrixContext ctx) {
 
         String matrixString = ctx.MATRIX().getText();
 
@@ -124,21 +167,19 @@ public class CalculatorBaseVisitorImpl extends CalculatorBaseVisitor<Matrix> {
 
         Matrix matrix = new Matrix(matrixArray);
 
-        return matrix;
+        Value value = new Value(matrix);
+
+        return value;
     }
 
     @Override
-    public Matrix visitVariable(CalculatorParser.VariableContext ctx) {
-        return Storage.get(ctx.ID().getText());
+    public Value visitVariable(CalculatorParser.VariableContext ctx) {
+        return new Value(Storage.get(ctx.ID().getText()));
     }
 
-//    @Override
-//    public Double visitDouble(CalculatorParser.DoubleContext ctx) {
-//        return Double.parseDouble(ctx.DOUBLE().getText());
-//    }
 
     @Override
-    public Matrix visitCalculate(CalculatorParser.CalculateContext ctx) {
+    public Value visitCalculate(CalculatorParser.CalculateContext ctx) {
         return visit(ctx.plusOrMinus());
     }
 }

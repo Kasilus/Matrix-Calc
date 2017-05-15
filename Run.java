@@ -26,15 +26,19 @@ public class Run {
 //            walker.walk(listener,tree);
 
             CalculatorBaseVisitorImpl calcVisitor = new CalculatorBaseVisitorImpl();
-            Matrix result = calcVisitor.visit(tree);
-            double[][] d = result.getArray();
-            for (int i=0; i<d.length; i++){
-                for (int j=0; j<d[0].length; j++){
-                    System.out.print(d[i][j] + " ");
-                }
-                System.out.println();
-            }
+            Value result = calcVisitor.visit(tree);
 
+            if (result.isInteger()){
+                System.out.println(result.asInteger());
+            } else {
+                double[][] d = result.asMatrix().getArray();
+                for (int i = 0; i < d.length; i++) {
+                    for (int j = 0; j < d[0].length; j++) {
+                        System.out.print(d[i][j] + " ");
+                    }
+                    System.out.println();
+                }
+            }
         }
     }
 }
