@@ -2,6 +2,9 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Run {
@@ -30,13 +33,17 @@ public class Run {
                 calcVisitor = new CalculatorBaseVisitorImpl();
                 result = calcVisitor.visit(tree);
 
+                NumberFormat formatter = NumberFormat.getNumberInstance(Locale.ROOT);
+                DecimalFormat dformatter = (DecimalFormat) formatter;
+                dformatter.applyPattern("0.00");
+
                 if (result.isInteger()){
                     System.out.println(result.asInteger());
                 } else {
                     double[][] d = result.asMatrix().getArray();
                     for (int i = 0; i < d.length; i++) {
                         for (int j = 0; j < d[0].length; j++) {
-                            System.out.print(d[i][j] + " ");
+                            System.out.print(dformatter.format(d[i][j]) + " ");
                         }
                         System.out.println();
                     }
