@@ -1,8 +1,6 @@
-import Jama.Matrix;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import java.util.Scanner;
 
@@ -25,20 +23,33 @@ public class Run {
 //            CalculatorListener listener = new CalculatorPrintEverything();
 //            walker.walk(listener,tree);
 
-            CalculatorBaseVisitorImpl calcVisitor = new CalculatorBaseVisitorImpl();
-            Value result = calcVisitor.visit(tree);
+            CalculatorBaseVisitorImpl calcVisitor;
+            Value result;
 
-            if (result.isInteger()){
-                System.out.println(result.asInteger());
-            } else {
-                double[][] d = result.asMatrix().getArray();
-                for (int i = 0; i < d.length; i++) {
-                    for (int j = 0; j < d[0].length; j++) {
-                        System.out.print(d[i][j] + " ");
+            try {
+                calcVisitor = new CalculatorBaseVisitorImpl();
+                result = calcVisitor.visit(tree);
+
+                if (result.isInteger()){
+                    System.out.println(result.asInteger());
+                } else {
+                    double[][] d = result.asMatrix().getArray();
+                    for (int i = 0; i < d.length; i++) {
+                        for (int j = 0; j < d[0].length; j++) {
+                            System.out.print(d[i][j] + " ");
+                        }
+                        System.out.println();
                     }
-                    System.out.println();
                 }
+
+            }catch (IllegalStateException e){
+                System.out.println(e.getMessage());
+            }catch (NullPointerException e){
+                System.out.println("This variable has not initialized yet!");
             }
+
+
+
         }
     }
 }

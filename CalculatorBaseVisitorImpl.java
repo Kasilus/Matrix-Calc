@@ -12,12 +12,8 @@ public class CalculatorBaseVisitorImpl extends CalculatorBaseVisitor<Value> {
         Value value1 = visit(ctx.plusOrMinus());
         Value value2 = visit(ctx.mult());
 
-        if (value1.isInteger()){
-            throw new IllegalStateException();
-        }
-
-        if (value2.isInteger()){
-            throw new IllegalStateException();
+        if ((value1.isInteger())||(value2.isInteger())){
+            throw new IllegalStateException("In addition must be just matrices!");
         }
 
         Value sum = new Value((value1.asMatrix()).plus(value2.asMatrix()));
@@ -31,12 +27,8 @@ public class CalculatorBaseVisitorImpl extends CalculatorBaseVisitor<Value> {
         Value value1 = visit(ctx.plusOrMinus());
         Value value2 = visit(ctx.mult());
 
-        if (value1.isInteger()){
-            throw new IllegalStateException();
-        }
-
-        if (value2.isInteger()){
-            throw new IllegalStateException();
+        if ((value1.isInteger())||(value2.isInteger())){
+            throw new IllegalStateException("In subtraction must be just matrices!");
         }
 
         Value sub = new Value((value1.asMatrix()).minus(value2.asMatrix()));
@@ -51,7 +43,7 @@ public class CalculatorBaseVisitorImpl extends CalculatorBaseVisitor<Value> {
         Value value2 = visit(ctx.transponation());
 
         if ((value1.isInteger())&&(value2.isInteger())){
-            throw new IllegalStateException();
+            throw new IllegalStateException("In multiplication must be at least 1 matrix!");
         }
 
         Value valueMult;
@@ -76,12 +68,17 @@ public class CalculatorBaseVisitorImpl extends CalculatorBaseVisitor<Value> {
 
         Value value = visit(ctx.plusOrMinus());
 
-        if (value.isMatrix()) {
-            Matrix matrixValue = value.asMatrix();
-            Storage.set(ctx.ID().getText(), matrixValue);
-            return value;
+        if (value!=null) {
+            if (value.isMatrix()) {
+                Matrix matrixValue = value.asMatrix();
+                Storage.set(ctx.ID().getText(), matrixValue);
+                return value;
+            } else {
+                throw new IllegalStateException("You can assign just matrices!");
+            }
+        } else {
+            throw new IllegalStateException("Wrong input!");
         }
-        return null;
     }
 
 
@@ -91,7 +88,6 @@ public class CalculatorBaseVisitorImpl extends CalculatorBaseVisitor<Value> {
         if (ctx.TRANSP() != null) {
 
             Value value = new Value(visit(ctx.unaryMinus()).asMatrix().transpose());
-
             return value;
         }
 
@@ -104,7 +100,7 @@ public class CalculatorBaseVisitorImpl extends CalculatorBaseVisitor<Value> {
         Value value = visit(ctx.plusOrMinus());
 
         if (value.isInteger()){
-            throw new IllegalStateException();
+            throw new IllegalStateException("You can take rang just of matrix!");
         }
 
         Integer runk = value.asMatrix().rank();
@@ -118,7 +114,7 @@ public class CalculatorBaseVisitorImpl extends CalculatorBaseVisitor<Value> {
         Value value = visit(ctx.unaryMinus());
 
         if (value.isInteger()){
-            throw new IllegalStateException();
+            return new Value((value.asInteger()*(-1)));
         }
 
         return new Value(value.asMatrix().times(-1));

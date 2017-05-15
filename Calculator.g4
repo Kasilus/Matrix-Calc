@@ -17,8 +17,7 @@ TRANSP: '^T';
 RANK  : 'rank';
 MATRIX : '[''['NUMBER(','[ ]*NUMBER)*']'
 (','[ ]*'['NUMBER (','[ ]*NUMBER)*']')*']';
-VALUE : MATRIX
-      | INT;
+
 
 input
     : ID EQUAL plusOrMinus EOF     # ToSetVar
@@ -26,33 +25,33 @@ input
     ;
 
 plusOrMinus
-    : plusOrMinus PLUS mult  # Plus
-    | plusOrMinus MINUS mult # Minus
-    | mult                   # ToMult
+    : plusOrMinus PLUS mult        # Plus
+    | plusOrMinus MINUS mult       # Minus
+    | mult                         # ToMult
     ;
 
 mult
-    : mult MULT transponation     # Multiplication
-    | transponation               # ToTransponation
+    : mult MULT transponation      # Multiplication
+    | transponation                # ToTransponation
     ;
 
 rank
-    : RANK LPAR plusOrMinus RPAR  #Runk
+    : RANK LPAR plusOrMinus RPAR   #Runk
     ;
 
 transponation
-    : unaryMinus (TRANSP)?        # Power
+    : unaryMinus (TRANSP)?         # Power
     ;
 
 
 unaryMinus
-    : MINUS unaryMinus # ChangeSign
-    | rank             # Rang
-    | atom             # ToAtom
+    : MINUS unaryMinus             # ChangeSign
+    | rank                         # Rang
+    | atom                         # ToAtom
     ;
 
 atom
-    : MATRIX                # Matrix
-    | ID                    # Variable
-    | LPAR plusOrMinus RPAR # Braces
+    : MATRIX                       # Matrix
+    | ID                           # Variable
+    | LPAR plusOrMinus RPAR        # Braces
     ;
