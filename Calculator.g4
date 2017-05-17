@@ -1,10 +1,10 @@
 grammar Calculator;
-INT    : [+-]?[0-9]+;
-DOUBLE : [+-]?[0-9]+'.'[0-9]+;
+INT    : [-]?[0-9]+;
+DOUBLE : [-]?[0-9]+'.'[0-9]+;
 NUMBER : INT
        | DOUBLE;
 NL     : '\n';
-WS     : [ \t\r]+ -> skip;
+WS     : [ \t\r]+ -> skip;                        // многа пробелов
 ID     : [A-Z]+;
 
 PLUS  : '+';
@@ -20,7 +20,7 @@ MATRIX : '[''['NUMBER(','[ ]*NUMBER)*']'
 
 
 input
-    : ID EQUAL plusOrMinus EOF     # ToSetVar
+    : ID EQUAL plusOrMinus EOF     # ToSetVar               //искать в других классах по названиям после #
     | plusOrMinus EOF              # Calculate
     ;
 
@@ -52,6 +52,8 @@ unaryMinus
 
 atom
     : MATRIX                       # Matrix
+    | INT                          # Integer
+    | DOUBLE                       # Double
     | ID                           # Variable
     | LPAR plusOrMinus RPAR        # Braces
     ;

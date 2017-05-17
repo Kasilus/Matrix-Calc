@@ -12,8 +12,13 @@ public class CalculatorBaseVisitorImpl extends CalculatorBaseVisitor<Value> {
         Value value1 = visit(ctx.plusOrMinus());
         Value value2 = visit(ctx.mult());
 
-        if ((value1.isInteger())||(value2.isInteger())){
-            throw new IllegalStateException("In addition must be just matrices!");
+        if ((value1.isDouble())&&(value2.isDouble())){
+            Value sumInt = new Value(value1.asDouble() + value2.asDouble());
+            return sumInt;
+        }
+
+        if ((value1.isDouble())||(value2.isDouble())){
+            throw new IllegalStateException("In addition must be just matrices or ints!");
         }
 
         Value sum = new Value((value1.asMatrix()).plus(value2.asMatrix()));
@@ -27,8 +32,13 @@ public class CalculatorBaseVisitorImpl extends CalculatorBaseVisitor<Value> {
         Value value1 = visit(ctx.plusOrMinus());
         Value value2 = visit(ctx.mult());
 
-        if ((value1.isInteger())||(value2.isInteger())){
-            throw new IllegalStateException("In subtraction must be just matrices!");
+        if ((value1.isDouble())&&(value2.isDouble())){
+            Value subInt = new Value(value1.asDouble() - value2.asDouble());
+            return subInt;
+        }
+
+        if ((value1.isDouble())||(value2.isDouble())){
+            throw new IllegalStateException("In subtraction must be just matrices or ints!");
         }
 
         Value sub = new Value((value1.asMatrix()).minus(value2.asMatrix()));
@@ -41,20 +51,22 @@ public class CalculatorBaseVisitorImpl extends CalculatorBaseVisitor<Value> {
 
         Value value1 = visit(ctx.mult());
         Value value2 = visit(ctx.transponation());
-
-        if ((value1.isInteger())&&(value2.isInteger())){
-            throw new IllegalStateException("In multiplication must be at least 1 matrix!");
-        }
-
         Value valueMult;
 
-        if (value1.isInteger()){
-            valueMult = new Value(value2.asMatrix().times(value1.asInteger()));
+
+        if ((value1.isDouble())&&(value2.isDouble())){
+            valueMult = new Value(value1.asDouble() * value2.asDouble());
             return valueMult;
         }
 
-        if (value2.isInteger()){
-            valueMult = new Value(value1.asMatrix().times(value2.asInteger()));
+
+        if (value1.isDouble()){
+            valueMult = new Value(value2.asMatrix().times(value1.asDouble()));
+            return valueMult;
+        }
+
+        if (value2.isDouble()){
+            valueMult = new Value(value1.asMatrix().times(value2.asDouble()));
             return valueMult;
         }
 
@@ -99,11 +111,11 @@ public class CalculatorBaseVisitorImpl extends CalculatorBaseVisitor<Value> {
 
         Value value = visit(ctx.plusOrMinus());
 
-        if (value.isInteger()){
+        if (value.isDouble()){
             throw new IllegalStateException("You can take rang just of matrix!");
         }
 
-        Integer runk = value.asMatrix().rank();
+        Double runk = Double.valueOf(value.asMatrix().rank());
 
         return new Value(runk);
     }
@@ -113,8 +125,8 @@ public class CalculatorBaseVisitorImpl extends CalculatorBaseVisitor<Value> {
 
         Value value = visit(ctx.unaryMinus());
 
-        if (value.isInteger()){
-            return new Value((value.asInteger()*(-1)));
+        if (value.isDouble()){
+            return new Value((value.asDouble()*(-1)));
         }
 
         return new Value(value.asMatrix().times(-1));
@@ -166,6 +178,14 @@ public class CalculatorBaseVisitorImpl extends CalculatorBaseVisitor<Value> {
         Value value = new Value(matrix);
 
         return value;
+    }
+
+    @Override public Value visitInteger(CalculatorParser.IntegerContext ctx) {
+        return new Value(Double.parseDouble(ctx.INT().getText()));
+    }
+
+    @Override public Value visitDouble(CalculatorParser.DoubleContext ctx) {
+        return new Value(Double.parseDouble(ctx.DOUBLE().getText()));
     }
 
     @Override

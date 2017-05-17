@@ -137,6 +137,27 @@ public class CalculatorPrintEverything implements CalculatorListener {
     }
 
     @Override
+    public void enterInteger(CalculatorParser.IntegerContext ctx) {
+        System.err.println("entering Integer");
+    }
+
+    @Override
+    public void exitInteger(CalculatorParser.IntegerContext ctx) {
+        System.err.println("exiting Integer");
+    }
+
+    @Override
+    public void enterDouble(CalculatorParser.DoubleContext ctx) {
+        System.err.println("entering Double");
+    }
+
+    @Override
+    public void exitDouble(CalculatorParser.DoubleContext ctx) {
+        System.err.println("exiting Double");
+    }
+
+
+    @Override
     public void enterVariable(CalculatorParser.VariableContext ctx) {
         System.err.println("entering Variable");
     }

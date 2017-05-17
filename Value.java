@@ -11,16 +11,17 @@ public class Value {
     public boolean isMatrix() {
         return value instanceof Matrix;
     }
+
     public Matrix asMatrix() {
         return (Matrix) value;
     }
 
-    public boolean isInteger() {
-        return value instanceof Integer;
+    public boolean isDouble() {
+        return value instanceof Double;
     }
 
-    public Integer asInteger() {
-        return (Integer) value;
+    public Double asDouble() {
+        return (Double) value;
     }
 
 
